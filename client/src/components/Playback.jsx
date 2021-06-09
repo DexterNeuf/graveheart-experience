@@ -30,10 +30,8 @@ class Playback extends React.Component{
             albumName: "",
             albumId: "",
             albumLength: 0,
-            albumLink:"",
             album: {},
             albumWithLyrics: {},
-            albumImg: "",
             currentSongIndex: 0,
             albumHasChanged: true,
             Lyricswrapper : "",
@@ -126,11 +124,11 @@ class Playback extends React.Component{
                 right: 0;
                 z-index: 1;
                 display: block;
-                background-image: url('${this.state.albumImg}');
+                background-image: url('/grave1.jpg');
                 height: 100vh;
                  background-size: cover;
                 background-position: center center;
-                filter: blur(5.5em) opacity(0.6);
+                filter: blur(0.5em) opacity(0.6);
             }
             }
             
@@ -207,8 +205,6 @@ class Playback extends React.Component{
             albumName: data.item.album.name,
             albumLength: data.item.album.total_tracks,
             albumId: data.item.album.id,
-            albumImg: data.item.album.images[0].url,
-            albumLink: data.item.album.external_urls.spotify,
             progress : data.progress_ms,
             duration : data.item.duration_ms
          }, () =>{
