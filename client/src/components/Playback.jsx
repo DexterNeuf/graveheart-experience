@@ -21,12 +21,9 @@ class Playback extends React.Component{
             id: "",
             name: "",
             accessToken: "",
-            favouriteAlbums: [],
-            recentAlbums: [],
             intialRun: true,
             isPlaying: false,
             pausedCounter: 0 ,
-            recentCounter: 0,
             trackName: "",
             trackNumber: "",
             trackArtist: "",
@@ -54,9 +51,6 @@ class Playback extends React.Component{
             this.setState({
                 isPlaying: false,
                 pausedCounter: 5
-            }, () =>{
-                this.getUserFavouriteAlbums()
-                this.getUserRecentAlbums()
             })
         )
     }
@@ -94,65 +88,6 @@ class Playback extends React.Component{
         fetch('https://api.spotify.com/v1/me/player/previous', {
             method:'POST',
             headers: {'Authorization': 'Bearer ' + this.state.accessToken}
-        })
-    }
-    getUserFavouriteAlbums(){
-        let config ={
-            headers:{
-                "Access-Control-Allow-Origin": "*"
-                }
-        }
-        axios.get( backend +"favourites/"+ this.state.id , config).then((res) => {
-            this.setState({
-                favouriteAlbums: res.data
-            })
-        })
-    }
-    getUserRecentAlbums(){
-        let config ={
-            headers:{
-            "Access-Control-Allow-Origin": "*"
-            }
-        }
-        axios.get( backend + "recent/"+ this.state.id , config).then((res) => {
-            this.setState({
-                recentAlbums: res.data
-            })
-        })
-    }
-    delete(album){
-        const data = {
-            album: album
-        }
-        axios.patch(backend + "favourite/" + this.state.id, data)
-        .then((response) => {
-            this.getUserFavouriteAlbums();
-        })
-    }
-
-    favouriteAlbum(){
-        const data = {
-            album : this.state.albumName,
-            albumImg : this.state.albumImg,
-            albumArtist : this.state.trackArtist,
-            albumLink : this.state.albumLink
-        }
-        axios.post(backend + "favourite/" + this.state.id, data)
-        .then((response) => {
-            this.getUserFavouriteAlbums();
-        })
-    }
-    
-    recentAlbum(){
-        const data = {
-            album : this.state.albumName,
-            albumImg : this.state.albumImg,
-            albumArtist : this.state.trackArtist,
-            albumLink : this.state.albumLink
-        }
-        axios.post(backend + "recent/" + this.state.id, data)
-        .then((response) => {
-            console.log(response)
         })
     }
     updatePlaybackBar(){
@@ -342,26 +277,6 @@ class Playback extends React.Component{
                 })
             }
             // check if album is different then grab new album info 
-            if ( data.item.album.name !== this.state.albumName){
-                this.setState({ 
-                    albumHasChanged : false
-                },() => {this.getCurrentlyPlaying()} )
-                // album has changed and previously album was added to backend reset so newer albums and be recently played
-                if(this.state.recentCounter >= 10){
-                    this.setState({
-                        recentCounter : 0
-                    })
-                }
-            //checks track if the same album has been playing then adds to recently played in backend
-            }else if(this.state.recentCounter < 10 && !this.state.intialRun ){
-                this.setState({
-                    recentCounter: (this.state.recentCounter + 1),
-                },()=>{
-                    if(this.state.recentCounter === 10 ){
-                        this.recentAlbum()
-                    }
-                })
-            }
         }).catch((error) => console.log(error))
         }
 
@@ -381,9 +296,6 @@ class Playback extends React.Component{
         .then(data => this.setState({
             name:data.display_name,
             id: data.id
-        },() => {
-            this.getUserFavouriteAlbums()
-            this.getUserRecentAlbums()
         })); 
 
     }
@@ -391,58 +303,12 @@ class Playback extends React.Component{
 
      
     render(){
-    //makes div's for rendering favourite albums
-    let newFavourite = "";
-    let newRecent = "";
-    let isAlbumFavourited = this.state.favouriteAlbums.find(e => e.album === this.state.albumName)
-
-    if (this.state.favouriteAlbums.length !== 0){
-        newFavourite = this.state.favouriteAlbums.map((ele) => {
-            return(
-            <div className="album">
-                <a href={ele.albumLink} target="_blank" rel="noopener noreferrer">
-            <img src={ele.albumImg} alt="album cover"/>
-            <div className="album__text">
-                <h2>{ele.album}</h2>
-                <p>{ele.albumArtist}</p>
-            </div>
-            </a>
-            <span className="album__delete" onClick={() =>{this.delete(ele.album)}} >
-            <IconContext.Provider value={{ size: "1.30em"}}>
-            <ImCancelCircle/>
-            </IconContext.Provider>
-                </span>
-        </div>
-        )
-        }) 
-    }
-    //makes div's for rendering recently played albums
     
-    if (this.state.recentAlbums.length !== 0){
-        newRecent = this.state.recentAlbums.map((ele) => {
-            return(
-            <div className="album">
-            <a href={ele.albumLink} target="_blank" rel="noopener noreferrer">
-            <img src={ele.albumImg} alt="album cover"/>
-            <div className="album__text">
-                <h2>{ele.album}</h2>
-                <p>{ele.albumArtist}</p>
-            </div>
-            </a>
-        </div>
-        )
-        }) 
-    }
-    //makes 
+  
     if(this.state.albumWithLyrics.length === undefined || (this.state.isPlaying === false && this.state.intialRun === true) || this.state.pausedCounter === 5){
     return(
     <main className="main-playback">
-        <h1> Welcome Dexter</h1>
-        <h3>Play any album to continue</h3>
-        <h2>Your Favourites</h2>
-                <div className="album-wrapper">{newFavourite}</div>
-        <h2>Your recently played </h2>
-                <div className="album-wrapper">{newRecent}</div>
+        <h1> {this.state.name}</h1>
     </main>
     )
     }
@@ -486,16 +352,6 @@ class Playback extends React.Component{
                         </div>
                         <div className="playback-bar__last">
                         <IconContext.Provider value={{ size: "1.75em" , className: 'react-icons' }}>
-                        {!isAlbumFavourited ?
-                        <span onClick={() =>{this.favouriteAlbum()}}>
-                            <AiOutlineHeart/>
-                        </span>
-                        :
-                        <span onClick={() =>{this.delete(this.state.albumName)}}>
-                            <AiFillHeart/>
-                        </span>
-                        
-                        }
                         </IconContext.Provider>
                     </div>
                 </div>
