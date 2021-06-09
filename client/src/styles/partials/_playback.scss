@@ -1,0 +1,161 @@
+.main-playback {
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  background-color: rgb(10, 10, 10);
+  min-height: 100vh;
+  h1 {
+    margin: 0;
+  }
+  h2 {
+    margin: 0;
+  }
+  h3 {
+    font-weight: 400;
+  }
+}
+p {
+  margin: 0;
+  white-space: break-spaces;
+}
+.lyrics-wrapper {
+  display: flex;
+  justify-content: center;
+  overflow-wrap: break-word;
+  min-height: 100vh;
+}
+
+.lyrics {
+  display: flex;
+  padding-left: 0.5rem;
+  padding-top: 2rem;
+  width: 720px;
+  margin-right: 0.5rem;
+  text-align: center;
+  z-index: 9999;
+  filter: blur(0px);
+  max-height: 100%;
+  line-height: 2rem;
+  font-size: 1.125rem;
+  align-items: center;
+  overflow-wrap: break-word;
+  justify-content: center;
+  margin-bottom: 2rem;
+  &__title {
+    font-size: 2rem;
+    line-height: 5rem;
+    font-weight: 700;
+  }
+}
+.background {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center center;
+  filter: blur(2.5em) opacity(0.6);
+  position: absolute;
+}
+.album-wrapper {
+  display: flex;
+  width: 800px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 1.5rem 0;
+}
+.album {
+  position: relative;
+  display: inline-block; /* Make the width of box same as image */
+  width: 214px;
+  margin-top: 2rem;
+  background: rgba(20, 20, 20, 0.9);
+  padding: 1rem;
+  border-radius: 6px;
+  &:hover {
+    background-color: rgba(53, 53, 53, 0.7);
+  }
+  img {
+    width: 214px;
+    height: 214px;
+  }
+  &__text {
+    padding-top: 0.4rem;
+    display: inline-block;
+    width: 214px;
+    z-index: 999;
+    text-align: left;
+    top: 0; /* Adjust this value to move the positioned div up and down */
+    font-family: Arial, sans-serif;
+    color: #fff;
+    overflow-wrap: break-word;
+    h2 {
+      font-size: 1rem;
+      overflow-wrap: break-word;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-family: "Roboto", sans-serif;
+      font-weight: 100;
+      color: rgb(207, 207, 207);
+    }
+  }
+  &__delete {
+    float: right;
+    :hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.playback-bar {
+  position: -webkit-sticky;
+  border-radius: 4px;
+  position: sticky;
+  bottom: 0px;
+  height: 83px;
+  width: 500px;
+  background-color: rgba(10, 10, 10, 0.99);
+  margin: 0 auto;
+  z-index: 99999;
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+  }
+  &__controls {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span {
+      padding: 0 1rem;
+    }
+  }
+  &__first {
+    width: 25%;
+    padding-left: 1rem;
+    box-sizing: border-box;
+  }
+  &__last {
+    width: 25%;
+    text-align: end;
+  }
+}
+
+.react-icons {
+  margin-right: 10px;
+}
+.progress {
+  border: 0.15em solid #eee;
+  height: 0.5em;
+  margin-bottom: 10px;
+}
+.progress-bar {
+  width: 50%;
+  background-color: #eee;
+  border: 0.1em solid transparent;
+  height: 0.45em;
+}
