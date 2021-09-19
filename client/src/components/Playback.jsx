@@ -27,14 +27,16 @@ class Playback extends React.Component{
             count: 0,
             intialRun: true,
             progress: "",
-            duration: ""
+            duration: "",
+            currentLyrics: ""
         }
     }
     
     componentDidMount(){
         let parsed = queryString.parse(window.location.search);
         let accessToken = parsed.access_token;
-        this.setState({accessToken: accessToken,})
+        this.setState({accessToken: accessToken,});
+        this.lyricsTimer();
         fetch('https://api.spotify.com/v1/me',{
                 headers: {'Authorization': 'Bearer ' + accessToken}
             }).then(response => response.json())
@@ -44,6 +46,7 @@ class Playback extends React.Component{
                 
             },() => {
                 this.getCurrentlyPlaying()
+                // this.lyricsTimer()
             })); 
         this.myInterval = setInterval(() => {
             this.timer()
@@ -73,6 +76,30 @@ class Playback extends React.Component{
             this.getCurrentlyPlaying()
         }   
     }
+    lyricsTimer(){
+        let lyricsArr = [
+            //Length is represtend of seconds
+            {lyrics: "hello world", timelength:2},
+            {lyrics: "nice talking to world", timelength:6},
+            {lyrics: "its been nice world", timelength:3},
+            {lyrics: "goodbye world", timelength:1}
+        ]
+
+        function sleep(ms){
+            return new Promise ((accept) => {
+                setTimeout(() => {
+                    accept();
+                }, ms);
+            });
+        }
+        async function main(){
+            for (let i = 0; i < lyricsArr.length; i++){
+                console.log(lyricsArr[i].lyrics);
+                await sleep(lyricsArr[i].timelength * 1000);
+            }
+        }
+        main(); 
+    }
     getCurrentlyPlaying(){
         fetch('https://api.spotify.com/v1/me/player/currently-playing',{
             headers: {'Authorization': 'Bearer ' + this.state.accessToken}
@@ -100,6 +127,7 @@ class Playback extends React.Component{
                 <h1>{this.state.trackName}</h1>
                 <h1>{this.state.trackArtist}</h1>
                 <h1>{this.state.albumName}</h1>
+                <h1>{this.state.currentLyrics}</h1>
             </div>
         )
     }
