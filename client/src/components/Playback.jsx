@@ -77,6 +77,7 @@ class Playback extends React.Component{
         }   
     }
     lyricsTimer(){
+        
         let lyricsArr = [
             //Length is represtend of seconds
             {lyrics: "hello world", timelength:2},
@@ -94,11 +95,17 @@ class Playback extends React.Component{
         }
         async function main(){
             for (let i = 0; i < lyricsArr.length; i++){
-                console.log(lyricsArr[i].lyrics);
-                await sleep(lyricsArr[i].timelength * 1000);
+                this.setState({
+                    currentLyrics: lyricsArr[i].lyrics
+                })
+            
+                await sleep(lyricsArr[i].timelength * 1000)
             }
         }
-        main(); 
+        
+        
+        
+        main.call(this); 
     }
     getCurrentlyPlaying(){
         fetch('https://api.spotify.com/v1/me/player/currently-playing',{
