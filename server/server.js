@@ -58,129 +58,17 @@ app.get('/callback', function(req, res) {
   })
 });
 
-
-
-app.get('/user/favourites/:id', function(req, res){
-  const readFile = (fs.readFileSync("./data/users.json", "utf8"));
-  const oldJson = JSON.parse(readFile)
-  const existingUserIndex = oldJson.findIndex((e)=> e.id === req.params.id)
-  JSON.stringify(oldJson[existingUserIndex].favAlbums)
-  res.json(oldJson[existingUserIndex].favAlbums) 
-});
-
-app.get('/user/recent/:id', function(req, res){
-  const readFile = (fs.readFileSync("./data/users.json", "utf8"));
-  const oldJson = JSON.parse(readFile)
-  const existingUserIndex = oldJson.findIndex((e)=> e.id === req.params.id)
-  JSON.stringify(oldJson[existingUserIndex].recentAlbums)
-  res.json(oldJson[existingUserIndex].recentAlbums) 
-});
-
-app.post('/user/favourite/:id', function(req, res){
-  const readFile = (fs.readFileSync("./data/users.json", "utf8"));
-  const oldJson = JSON.parse(readFile)
-  const existingUserIndex = oldJson.findIndex((e)=> e.id === req.params.id) 
-  if(existingUserIndex !== -1){
-    const existingAlbumIndex = oldJson[existingUserIndex].favAlbums.findIndex((e)=> e.album.toUpperCase() === req.body.album.toUpperCase())
-    //adds album if it doesn't exist
-    if(existingAlbumIndex === -1){
-      const newFavAlbum = {
-        album : req.body.album,
-        albumImg : req.body.albumImg,
-        albumArtist : req.body.albumArtist,
-        albumLink : req.body.albumLink,
-      }
-      //pushs to fav album array
-      oldJson[existingUserIndex].favAlbums.push(newFavAlbum);
-      fs.writeFileSync("./data/users.json", JSON.stringify(oldJson), "utf-8")
-      res.json('fav albuma added')
-      }else{
-        res.json("album already favourited");
-      }
-    }else{
-      //create new user
-      let pushFavAlbum = { 
-        id: req.params.id ,
-        favAlbums: [
-          {
-        album : req.body.album,
-        albumImg : req.body.albumImg,
-        albumArtist : req.body.albumArtist,
-        albumLink : req.body.albumLink
-          }
-        ],
-        recentAlbums: [],
-      }
-      oldJson.push(pushFavAlbum);
-      fs.writeFileSync("./data/users.json", JSON.stringify(oldJson), "utf-8")
-      res.json('user added')
-    }
-})
-app.post('/user/recent/:id', function(req, res){
-  const readFile = (fs.readFileSync("./data/users.json", "utf8"));
-  const oldJson = JSON.parse(readFile);
-  const existingUserIndex = oldJson.findIndex((e)=> e.id === req.params.id) 
-  // checks if user exicts
-  if(existingUserIndex !== -1){
-    const existingAlbumIndex = oldJson[existingUserIndex].recentAlbums.findIndex((e)=> e.album.toUpperCase() === req.body.album.toUpperCase())
-    //album doesn't exist
-  if(existingAlbumIndex === -1){
-    if(oldJson[existingUserIndex].recentAlbums.length === 3){
-      const newFavAlbum = {
-        album : req.body.album,
-        albumImg : req.body.albumImg,
-        albumArtist : req.body.albumArtist,
-        albumLink : req.body.albumLink
-      }
-      oldJson[existingUserIndex].recentAlbums.unshift(newFavAlbum);
-      oldJson[existingUserIndex].recentAlbums.pop(newFavAlbum)
-      console.log(oldJson[existingUserIndex].recentAlbums)
-      fs.writeFileSync("./data/users.json", JSON.stringify(oldJson), "utf-8")
-      res.json('album added')
-    }else if(oldJson[existingUserIndex].recentAlbums.length < 3){
-      const newFavAlbum = {
-        album : req.body.album,
-        albumImg : req.body.albumImg,
-        albumArtist : req.body.albumArtist,
-        albumLink : req.body.albumLink
-      }
-      oldJson[existingUserIndex].recentAlbums.unshift(newFavAlbum)
-      fs.writeFileSync("./data/users.json", JSON.stringify(oldJson), "utf-8")
-      res.json('album added')
-    }
-  }
-}else{
-  //create new user
-  let pushFavAlbum = { 
-    id: req.params.id ,
-    favAlbums: [],
-    recentAlbums: [
-      {
-    album : req.body.album,
-    albumImg : req.body.albumImg,
-    albumArtist : req.body.albumArtist,
-    albumLink : req.body.albumLink
-      }
-    ]
-  }
-  oldJson.push(pushFavAlbum);
-  fs.writeFileSync("./data/users.json", JSON.stringify(oldJson), "utf-8")
-  res.json('user added')
-}
-
+app.get('/user/array', function(req, res){
+  let lyricsArr = [
+    //Length is represtend of seconds
+    {lyrics: "hello world", timelength:2},
+    {lyrics: "nice talking to world", timelength:6},
+    {lyrics: "its been nice world", timelength:3},
+    {lyrics: "goodbye world", timelength:1}
+]
+  res.json(lyricsArr)
 })
 
-app.patch('/user/favourite/:id', function(req, res){
-  let readFile = (fs.readFileSync("./data/users.json", "utf8"));
-  let oldJson = JSON.parse(readFile);
-  let existingUserIndex = oldJson.findIndex((e)=> e.id === req.params.id) 
-  let existingAlbumIndex = oldJson[existingUserIndex].favAlbums.findIndex((e)=> e.album.toUpperCase() === req.body.album.toUpperCase())
-  oldJson[existingUserIndex].favAlbums.splice(existingAlbumIndex , 1)
-  fs.writeFileSync("./data/users.json", JSON.stringify(oldJson), "utf-8")
-  res.json('album added')
-  console.log(req.body.album)
-  console.log(req.params.id)
-})
 
 let port = process.env.PORT || 8888
 console.log(`Listening on port ${port}. authencation server.`)

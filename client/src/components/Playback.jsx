@@ -77,14 +77,15 @@ class Playback extends React.Component{
         }   
     }
     lyricsTimer(){
-        
-        let lyricsArr = [
-            //Length is represtend of seconds
-            {lyrics: "hello world", timelength:2},
-            {lyrics: "nice talking to world", timelength:6},
-            {lyrics: "its been nice world", timelength:3},
-            {lyrics: "goodbye world", timelength:1}
-        ]
+        let config ={
+            headers:{
+                "Access-Control-Allow-Origin": "*"
+                }
+        }
+
+        axios.get(backend + "array", config).then((res) => {
+            main.call(this , res.data )
+        })
 
         function sleep(ms){
             return new Promise ((accept) => {
@@ -93,19 +94,16 @@ class Playback extends React.Component{
                 }, ms);
             });
         }
-        async function main(){
-            for (let i = 0; i < lyricsArr.length; i++){
+        async function main(arr){
+            for (let i = 0; i < arr.length; i++){
                 this.setState({
-                    currentLyrics: lyricsArr[i].lyrics
+                    currentLyrics: arr[i].lyrics
                 })
             
-                await sleep(lyricsArr[i].timelength * 1000)
+                await sleep(arr[i].timelength * 1000)
             }
         }
         
-        
-        
-        main.call(this); 
     }
     getCurrentlyPlaying(){
         fetch('https://api.spotify.com/v1/me/player/currently-playing',{
