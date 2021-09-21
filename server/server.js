@@ -60,8 +60,9 @@ app.get('/callback', function(req, res) {
 
 app.get('/user/array', function(req, res){
   const readFile =JSON.parse(fs.readFileSync("./data/m3.json", "utf8"))
-  const trackIndex = readFile.findIndex((e) => e.trackName === "GWAPO")
+  const trackIndex = readFile.findIndex((e) => e.trackName === req.query.trackName)
   res.json((readFile[trackIndex].lyrics))
+
 })
 
 

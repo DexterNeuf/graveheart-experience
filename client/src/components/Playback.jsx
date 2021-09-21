@@ -36,11 +36,16 @@ class Playback extends React.Component{
         let config ={
             headers:{
                 "Access-Control-Allow-Origin": "*"
-                }
+                },
+            params : {
+            albumName: "M3",
+            trackName : "HALO"
         }
+        }
+        
 
         axios.get(backend + "array", config).then((res) => {
-            console.log( res.data )
+            console.log(res)
         })
 
         let parsed = queryString.parse(window.location.search);
@@ -90,8 +95,13 @@ class Playback extends React.Component{
         let config ={
             headers:{
                 "Access-Control-Allow-Origin": "*"
-                }
+                },
+            params : {
+            albumName: "M3",
+            trackName : "HALO"
         }
+        }
+        
 
         axios.get(backend + "array", config).then((res) => {
             main.call(this , res.data )
@@ -134,7 +144,7 @@ class Playback extends React.Component{
     render(){
         // ADD CHECK IF ARTIST IS NOT GRAVEHEART
         return(
-            <div> 
+            <div className="container"> 
                 {this.state.isPlaying ? 
                 <h1>isPlaying</h1>:
                 <h1>isNotPlaying</h1>
