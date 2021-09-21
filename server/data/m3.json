@@ -1,0 +1,20 @@
+[
+  {
+    "trackName": "GWAPO",
+    "lyrics": [
+      { "bar": "hello world", "timelength": 2 },
+      { "bar": "nice talking to world", "timelength": 3 },
+      { "bar": "its been nice world", "timelength": 3 },
+      { "bar": "goodbye world", "timelength": 1 }
+    ]
+  },
+  {
+    "trackName": "HALO",
+    "lyrics": [
+      { "bar": "hello world", "timelength": 2 },
+      { "bar": "nice talking to world", "timelength": 3 },
+      { "bar": "its been nice world", "timelength": 3 },
+      { "bar": "goodbye world", "timelength": 1 }
+    ]
+  }
+]

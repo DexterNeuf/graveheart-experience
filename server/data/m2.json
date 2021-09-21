@@ -1,0 +1,6 @@
+[
+  { "lyrics": "hello world", "timelength": 2 },
+  { "lyrics": "nice talking to world", "timelength": 6 },
+  { "lyrics": "its been nice world", "timelength": 3 },
+  { "lyrics": "goodbye world", "timelength": 1 }
+]

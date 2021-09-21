@@ -28,15 +28,24 @@ class Playback extends React.Component{
             intialRun: true,
             progress: "",
             duration: "",
-            currentLyrics: ""
+            currentBar: ""
         }
     }
     
     componentDidMount(){
+        let config ={
+            headers:{
+                "Access-Control-Allow-Origin": "*"
+                }
+        }
+
+        axios.get(backend + "array", config).then((res) => {
+            console.log( res.data )
+        })
+
         let parsed = queryString.parse(window.location.search);
         let accessToken = parsed.access_token;
         this.setState({accessToken: accessToken,});
-        this.lyricsTimer();
         fetch('https://api.spotify.com/v1/me',{
                 headers: {'Authorization': 'Bearer ' + accessToken}
             }).then(response => response.json())
@@ -69,6 +78,7 @@ class Playback extends React.Component{
                     this.setState({
                         intialRun: false,
                     })
+                    this.lyricsTimer();
                 }
             })         
         }
@@ -97,7 +107,7 @@ class Playback extends React.Component{
         async function main(arr){
             for (let i = 0; i < arr.length; i++){
                 this.setState({
-                    currentLyrics: arr[i].lyrics
+                    currentBar: arr[i].bar
                 })
             
                 await sleep(arr[i].timelength * 1000)
@@ -132,7 +142,7 @@ class Playback extends React.Component{
                 <h1>{this.state.trackName}</h1>
                 <h1>{this.state.trackArtist}</h1>
                 <h1>{this.state.albumName}</h1>
-                <h1>{this.state.currentLyrics}</h1>
+                <h1>{this.state.currentBar}</h1>
             </div>
         )
     }

@@ -59,14 +59,9 @@ app.get('/callback', function(req, res) {
 });
 
 app.get('/user/array', function(req, res){
-  let lyricsArr = [
-    //Length is represtend of seconds
-    {lyrics: "hello world", timelength:2},
-    {lyrics: "nice talking to world", timelength:6},
-    {lyrics: "its been nice world", timelength:3},
-    {lyrics: "goodbye world", timelength:1}
-]
-  res.json(lyricsArr)
+  const readFile =JSON.parse(fs.readFileSync("./data/m3.json", "utf8"))
+  const trackIndex = readFile.findIndex((e) => e.trackName === "GWAPO")
+  res.json((readFile[trackIndex].lyrics))
 })
 
 
