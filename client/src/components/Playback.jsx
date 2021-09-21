@@ -60,7 +60,6 @@ class Playback extends React.Component{
                 
             },() => {
                 this.getCurrentlyPlaying()
-                // this.lyricsTimer()
             })); 
         this.myInterval = setInterval(() => {
             this.timer()
@@ -107,6 +106,13 @@ class Playback extends React.Component{
             main.call(this , res.data )
         })
 
+        function convertTimeToNum(num){
+          let minute = Number(num.substring(0,1))
+          let tenthSecond = Number(num.substring(2,3))
+          let second = Number(num.substring(3,4))
+          return (minute * 60 +  tenthSecond * 10  + second )
+        }
+
         function sleep(ms){
             return new Promise ((accept) => {
                 setTimeout(() => {
@@ -119,8 +125,8 @@ class Playback extends React.Component{
                 this.setState({
                     currentBar: arr[i].bar
                 })
-            
-                await sleep(arr[i].timelength * 1000)
+                let time = (arr[i].endTime - arr[i].startTime).toString();
+                await sleep((convertTimeToNum(time)) * 1000)
             }
         }
         
