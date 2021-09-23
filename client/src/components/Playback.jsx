@@ -63,7 +63,7 @@ class Playback extends React.Component{
             })); 
         this.myInterval = setInterval(() => {
             this.timer()
-            },10000)
+            },1500)
         
         
     }
@@ -82,7 +82,10 @@ class Playback extends React.Component{
                     this.setState({
                         intialRun: false,
                     })
+                    if (data.is_playing === true && data.item.album.artists[0].name === 'Graveheart'){
                     this.lyricsTimer();
+                    }
+                    
                 }
             })         
         }

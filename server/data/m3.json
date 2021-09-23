@@ -1,18 +1,89 @@
 [
   {
-    "trackName": "GWAPO",
+    "trackName": "ISLAND",
     "lyrics": [
-      { "bar": "GWAPO1", "startTime": 0.0, "endTime": 0.02 },
-      { "bar": "GWAPO2", "startTime": 0.02, "endTime": 0.04 },
-      { "bar": "GWAPO3", "startTime": 0.04, "endTime": 0.06 },
-      { "bar": "GWAPO4", "startTime": 0.06, "endTime": 0.08 }
+      { "bar": "[Intro]", "startTime": 0.0, "endTime": 0.19 },
+      {
+        "bar": "I’m in this bitch and I’m balling out",
+        "startTime": 0.19,
+        "endTime": 0.21
+      },
+      {
+        "bar": "Severed ties, I been dying for diamonds",
+        "startTime": 0.21,
+        "endTime": 0.22
+      },
+      {
+        "bar": "I got a vision of all of my brothers reclining, dining, all on a island",
+        "startTime": 0.22,
+        "endTime": 0.25
+      },
+      {
+        "bar": "My intuition is telling me",
+        "startTime": 0.25,
+        "endTime": 0.26
+      },
+      {
+        "bar": "All of the work and all of your time in",
+        "startTime": 0.26,
+        "endTime": 0.28
+      },
+      {
+        "bar": "This not nothing, not just rhyming",
+        "startTime": 0.28,
+        "endTime": 0.3
+      },
+      {
+        "bar": "This my destiny and I’m grinding",
+        "startTime": 0.3,
+        "endTime": 0.31
+      },
+      {
+        "bar": "Gotta pursue it cause I know",
+        "startTime": 0.31,
+        "endTime": 0.33
+      },
+      {
+        "bar": "Everything round me gon’ change",
+        "startTime": 0.33,
+        "endTime": 0.35
+      },
+      {
+        "bar": "Gotta go XXL, explode before my expiration date",
+        "startTime": 0.35,
+        "endTime": 0.38
+      },
+      {
+        "bar": "Ex gon' feel it when I blow",
+        "startTime": 0.38,
+        "endTime": 0.4
+      },
+      {
+        "bar": "See my prospects bout to change",
+        "startTime": 0.4,
+        "endTime": 0.41
+      },
+      {
+        "bar": "Want the money, not the fame",
+        "startTime": 0.41,
+        "endTime": 0.42
+      },
+      {
+        "bar": "I want freedom, not no chains",
+        "startTime": 0.42,
+        "endTime": 0.44
+      }
     ]
   },
   {
     "trackName": "HALO",
     "lyrics": [
-      { "bar": "HALO1", "startTime": 0.0, "endTime": 0.02 },
-      { "bar": "HALO2", "startTime": 0.02, "endTime": 0.04 },
+      { "bar": "[Intro]", "startTime": 0.0, "endTime": 0.02 },
+      {
+        "bar": "Halos on the whip, oh, I’m speeding",
+        "startTime": 0.02,
+        "endTime": 0.04
+      },
       { "bar": "HALO3", "startTime": 0.04, "endTime": 0.06 },
       { "bar": "HALO4", "startTime": 0.06, "endTime": 0.08 }
     ]
