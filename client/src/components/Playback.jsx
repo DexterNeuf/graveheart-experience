@@ -32,10 +32,13 @@ class Playback extends React.Component{
             currentBar: "",
             lrc: "",
             lyricsRunning: false,
+            currentIndex: 0,
+            time: 0
         }
     }
     
     componentDidMount(){
+        
         let parsed = queryString.parse(window.location.search);
         let accessToken = parsed.access_token;
         this.setState({accessToken: accessToken,});
@@ -68,7 +71,7 @@ class Playback extends React.Component{
                 })
             })
         }
-        async function ayncCall(){
+        async function asyncCall(){
             const test = await awaitParse();
             lyricsTimerCaller(test)
         }
@@ -82,17 +85,17 @@ class Playback extends React.Component{
                     this.setState({
                         intialRun: false,
                     })
-                    ayncCall();
-                    if (data.is_playing === true && data.item.album.artists[0].name === 'Graveheart'){
-                    // if(!this.state.lyricsRunning){
-                    //  this.lyricsTimer();
-                    //  this.setState({
-                    //      lyricsRunning: true
-                    //  })   
-                    // }else{
-                    //     console.log("lyrics running")
-                    // }
+                    
+                    // if (data.is_playing === true && data.item.album.artists[0].name === 'Graveheart'){
+                    if(!this.state.lyricsRunning){
+                     asyncCall();
+                     this.setState({
+                         lyricsRunning: true
+                     })   
+                    }else{
+                        console.log("lyrics running")
                     }
+                    // }
                     
                 }
             })         
@@ -103,11 +106,51 @@ class Playback extends React.Component{
         
     }
     lyricsTimer(resData){
-        // const newData = resData.data.replace(/(\r\n|\n|\r)/gm," ");
-        // console.log(newData)
+        const repeatArgumentCaller = repeatArgument.bind(this)
+        function repeatArgument() {
+                let adjTime = this.state.time + 0.1
+                this.state.lrc.timeUpdate(adjTime)
+                let runnerIndex = this.state.lrc.curIndex()
+                this.setState({
+                    time: adjTime,
+                    currentIndex: runnerIndex
+                },() =>{
+                    console.timeEnd()
+                })
+        }
+        function callbackArgument() {
+            console.log("count done")
+        }
+        function lrcRunner(timer, max){
+            var counter = 1;
+        
+            var init = (t) => {
+            let timeStart = new Date().getTime();
+            setTimeout(function () {
+                if (counter < max + 1) {
+                let fix = (new Date().getTime() - timeStart) - timer;
+                init(t - fix);
+                counter++;
+                
+                // event to be repeated max times
+                repeatArgumentCaller();
+                
+                } else {
+                // event to be executed at animation end
+                callbackArgument();
+                }
+            }, t);
+            }
+        init(timer);
+        }
+
         let runner = new Runner(Lrc.parse(resData.data))
-        runner.timeUpdate(22)
-        console.log(runner.getLyric(runner.curIndex()))
+        this.setState({
+            lrc: runner
+        },() => {
+            lrcRunner(100,999)
+        })
+        
         
     }
     getCurrentlyPlaying(){
@@ -123,22 +166,41 @@ class Playback extends React.Component{
                 albumName: data.item.album.name,
                 progress : data.progress_ms,
                 duration : data.item.duration_ms
+             },() => {
+                console.time()
              })
         })  
     }
     render(){
         // ADD CHECK IF ARTIST IS NOT GRAVEHEART
-        return(
-            <div className="container"> 
-                {this.state.isPlaying ? 
-                <h1>isPlaying</h1>:
-                <h1>isNotPlaying</h1>
-                }
-                <h1>{this.state.trackName}</h1>
-                <h1>{this.state.trackArtist}</h1>
-                <h1>{this.state.albumName}</h1>
-            </div>
-        )
+        if(typeof this.state.lrc === 'object'){
+            return(
+                <div className="container"> 
+                    {this.state.isPlaying ? 
+                    <h1>isPlaying</h1>:
+                    <h1>isNotPlaying</h1>
+                    }
+                    <h1>{this.state.trackName}</h1>
+                    <h1>{this.state.trackArtist}</h1>
+                    <h1>{this.state.albumName}</h1>
+                    <h1>{this.state.lrc.lrc.lyrics[this.state.currentIndex].content}</h1>
+                </div>
+            )
+        }else{
+            return(
+                <div className="container"> 
+                    {this.state.isPlaying ? 
+                    <h1>isPlaying</h1>:
+                    <h1>isNotPlaying</h1>
+                    }
+                    <h1>{this.state.trackName}</h1>
+                    <h1>{this.state.trackArtist}</h1>
+                    <h1>{this.state.albumName}</h1>
+                    {/* <h1>{this.state.lrc.lrc.lyrics[this.state.lrc.curIndex()].content}</h1> */}
+                </div>
+            )
+        }
+        
     }
 }
 export default Playback
