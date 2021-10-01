@@ -60,6 +60,7 @@ class Playback extends React.Component{
     }
 
     timer(){
+        const lyricsTimerCaller = this.lyricsTimer.bind(this)
         function awaitParse (){
             return new Promise( resolve => {
                 axios.get(backend + "lrc").then((res) => {
@@ -69,7 +70,7 @@ class Playback extends React.Component{
         }
         async function ayncCall(){
             const test = await awaitParse();
-            console.log(test + "is async")
+            lyricsTimerCaller(test)
         }
         // Waits till spotify is playing to run app
         if (this.state.intialRun){
@@ -83,14 +84,14 @@ class Playback extends React.Component{
                     })
                     ayncCall();
                     if (data.is_playing === true && data.item.album.artists[0].name === 'Graveheart'){
-                    if(!this.state.lyricsRunning){
-                     this.lyricsTimer();
-                     this.setState({
-                         lyricsRunning: true
-                     })   
-                    }else{
-                        console.log("lyrics running")
-                    }
+                    // if(!this.state.lyricsRunning){
+                    //  this.lyricsTimer();
+                    //  this.setState({
+                    //      lyricsRunning: true
+                    //  })   
+                    // }else{
+                    //     console.log("lyrics running")
+                    // }
                     }
                     
                 }
@@ -99,9 +100,14 @@ class Playback extends React.Component{
         if (!this.state.intialRun){
             this.getCurrentlyPlaying()
         }   
-    }
-    lyricsTimer(){
         
+    }
+    lyricsTimer(resData){
+        // const newData = resData.data.replace(/(\r\n|\n|\r)/gm," ");
+        // console.log(newData)
+        let runner = new Runner(Lrc.parse(resData.data))
+        runner.timeUpdate(22)
+        console.log(runner.getLyric(runner.curIndex()))
         
     }
     getCurrentlyPlaying(){
