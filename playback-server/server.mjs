@@ -36,7 +36,9 @@ setTimeout(() => res.json(newArray), 1500)
 	
 })
 
+
 let port = process.env.PORT || 8080
 console.log(`Listening on port ${port}. playback server.`)
+
 
 app.listen(port)

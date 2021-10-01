@@ -1,6 +1,7 @@
 import React from "react";
-import  queryString from 'query-string'
+import queryString from 'query-string'
 import axios from "axios"
+import { Lrc, Runner} from 'lrc-kit';
 import {IconContext} from "react-icons";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { IoMdSkipBackward, IoMdSkipForward } from "react-icons/io";
@@ -28,26 +29,13 @@ class Playback extends React.Component{
             intialRun: true,
             progress: "",
             duration: "",
-            currentBar: ""
+            currentBar: "",
+            lrc: "",
+            lyricsRunning: false,
         }
     }
     
     componentDidMount(){
-        let config ={
-            headers:{
-                "Access-Control-Allow-Origin": "*"
-                },
-            params : {
-            albumName: "M3",
-            trackName : "HALO"
-        }
-        }
-        
-
-        axios.get(backend + "array", config).then((res) => {
-            console.log(res)
-        })
-
         let parsed = queryString.parse(window.location.search);
         let accessToken = parsed.access_token;
         this.setState({accessToken: accessToken,});
@@ -72,6 +60,17 @@ class Playback extends React.Component{
     }
 
     timer(){
+        function awaitParse (){
+            return new Promise( resolve => {
+                axios.get(backend + "lrc").then((res) => {
+                    resolve(res)
+                })
+            })
+        }
+        async function ayncCall(){
+            const test = await awaitParse();
+            console.log(test + "is async")
+        }
         // Waits till spotify is playing to run app
         if (this.state.intialRun){
             fetch('https://api.spotify.com/v1/me/player/currently-playing',{
@@ -82,8 +81,16 @@ class Playback extends React.Component{
                     this.setState({
                         intialRun: false,
                     })
+                    ayncCall();
                     if (data.is_playing === true && data.item.album.artists[0].name === 'Graveheart'){
-                    this.lyricsTimer();
+                    if(!this.state.lyricsRunning){
+                     this.lyricsTimer();
+                     this.setState({
+                         lyricsRunning: true
+                     })   
+                    }else{
+                        console.log("lyrics running")
+                    }
                     }
                     
                 }
@@ -94,44 +101,7 @@ class Playback extends React.Component{
         }   
     }
     lyricsTimer(){
-        let config ={
-            headers:{
-                "Access-Control-Allow-Origin": "*"
-                },
-            params : {
-            albumName: "M3",
-            trackName : "ISLAND"
-        }
-        }
         
-
-        axios.get(backend + "array", config).then((res) => {
-            main.call(this , res.data )
-        })
-
-        function convertTimeToNum(num){
-          let minute = Number(num.substring(0,1))
-          let tenthSecond = Number(num.substring(2,3))
-          let second = Number(num.substring(3,4))
-          return (minute * 60 +  tenthSecond * 10  + second )
-        }
-
-        function sleep(ms){
-            return new Promise ((accept) => {
-                setTimeout(() => {
-                    accept();
-                }, ms);
-            });
-        }
-        async function main(arr){
-            for (let i = 0; i < arr.length; i++){
-                this.setState({
-                    currentBar: arr[i].bar
-                })
-                let time = (arr[i].endTime - arr[i].startTime).toString();
-                await sleep((convertTimeToNum(time)) * 1000)
-            }
-        }
         
     }
     getCurrentlyPlaying(){
@@ -161,7 +131,6 @@ class Playback extends React.Component{
                 <h1>{this.state.trackName}</h1>
                 <h1>{this.state.trackArtist}</h1>
                 <h1>{this.state.albumName}</h1>
-                <h1>{this.state.currentBar}</h1>
             </div>
         )
     }
